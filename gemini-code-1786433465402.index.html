@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時空旅人的任務：行李箱奇幻之旅 | 華南銀行</title>
+    <style>
+        :root {
+            --primary-red: #E60012;
+            --hncb-gold: #D4AF37;
+            --bg-night: #1A252C;
+            --card-bg: #FFFFFF;
+            --text-dark: #2C3E50;
+            --accent-blue: #2980B9;
+            --shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1f2a38 0%, #000000 100%);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 480px;
+            background: #FAF8F5;
+            border-radius: 28px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            position: relative;
+            min-height: 720px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 頂部導航列 */
+        .header {
+            background: linear-gradient(135deg, #111D25 0%, #203A43 100%);
+            color: white;
+            padding: 16px;
+            text-align: center;
+            position: relative;
+            border-bottom: 3px solid var(--hncb-gold);
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            letter-spacing: 1.5px;
+            color: var(--hncb-gold);
+            margin-bottom: 4px;
+        }
+
+        .header h2 {
+            font-size: 0.9rem;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        .progress-container {
+            width: 75%;
+            background: rgba(255,255,255,0.15);
+            height: 7px;
+            border-radius: 10px;
+            margin: 10px auto 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 20%;
+            background: linear-gradient(90deg, #D4AF37, #F39C12);
+            transition: width 0.4s ease;
+        }
+
+        /* 插畫視覺區 */
+        .illustration-box {
+            width: 100%;
+            height: 240px;
+            background: #111D25;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .illustration-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 故事內容與選項 */
+        .main-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: rgba(41, 128, 185, 0.1);
+            color: var(--accent-blue);
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+
+        .story-card {
+            background: white;
+            border-left: 4px solid var(--hncb-gold);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 18px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            color: #34495E;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #E5E8E8;
+            padding: 14px 16px;
+            border-radius: 16px;
+            text-align: left;
+            font-size: 0.92rem;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+        }
+
+        .option-btn:hover {
+            border-color: var(--hncb-gold);
+            background: #FFFDF9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(212, 175, 55, 0.2);
+        }
+
+        .option-badge {
+            background: #F2F4F4;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #7F8C8D;
+            flex-shrink: 0;
+        }
+
+        /* 結算頁面特別樣式 */
+        .result-screen {
+            display: none;
+            text-align: center;
+            padding: 24px 20px;
+        }
+
+        /* 人格關鍵字金牌 */
+        .title-badge {
+            background: linear-gradient(135deg, #C59325 0%, #AA7C11 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
+            box-shadow: 0 6px 18px rgba(170, 124, 17, 0.35);
+            letter-spacing: 1px;
+        }
+
+        .result-desc {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #566573;
+            margin-bottom: 20px;
+            background: #FFFFFF;
+            padding: 18px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .reward-banner {
+            background: linear-gradient(135deg, #FFEFBA, #FFFFFF);
+            border: 2px solid var(--hncb-gold);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .points-tag {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--primary-red);
+            margin: 6px 0;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #E60012 0%, #C0392B 100%);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(230, 0, 18, 0.35);
+            transition: transform 0.2s;
+        }
+
+        .cta-btn:hover { transform: scale(1.02); }
+
+        .tags-debug {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #BDC3C7;
+            text-align: left;
+            background: #1C2833;
+            padding: 12px;
+            border-radius: 10px;
+            line-height: 1.5;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <!-- Header -->
+    <div class="header">
+        <h1>時空旅人的任務</h1>
+        <h2>行李箱奇幻之旅</h2>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- 異國情境高質感插畫區 -->
+    <div class="illustration-box" id="illustrationBox">
+        <img id="sceneImage" src="" alt="情境畫面">
+    </div>
+
+    <!-- 遊戲主畫面 -->
+    <div class="main-content" id="gameScreen">
+        <div>
+            <div class="level-badge" id="levelTag">關卡 1 / 5</div>
+            <div class="story-card" id="storyText">載入冒險情境中...</div>
+        </div>
+
+        <div class="options-grid" id="optionsContainer"></div>
+    </div>
+
+    <!-- 結算畫面 (用戶已完成綁定) -->
+    <div class="main-content result-screen" id="resultScreen">
+        <h2 style="font-size: 1.2rem; color: #34495E;">🎉 任務完成！5 道時空鎖全數解開</h2>
+
+        <!-- 人格關鍵字金牌 -->
+        <div class="title-badge" id="userTitle">睿智的時空觀察者</div>
+
+        <!-- 人格屬性描述 -->
+        <div class="result-desc" id="userDesc">
+            你擁有極高的適應力與決策智慧，在漫長的旅程中順利幫助小n尋找行李箱主人並化解危機！
+        </div>
+
+        <div class="reward-banner">
+            <div style="font-size: 0.85rem; color: #555;">華南 LINE 綁定完成加碼禮</div>
+            <div class="points-tag">+ LINE POINTS 15 點</div>
+            <p style="font-size: 0.8rem; color: #27AE60;">點數將自動發送至您的 LINE 帳號！</p>
+        </div>
+
+        <button class="cta-btn" onclick="claimFinalReward()">一鍵領取 15 點紅包 ➔</button>
+
+        <div class="tags-debug" id="debugTags">
+            <strong>[華南銀行個人化數據貼標紀錄]</strong><br>
+            已成功將您的測驗偏好寫入華南銀行個人化服務資料庫...
+        </div>
+    </div>
+</div>
+
+<script>
+    // 5 關高質感情境插畫與故事資料
+    const gameData = [
+        {
+            level: 1,
+            category: "外幣帳戶偏好",
+            imgUrl: "image_c88f5c.jpg",
+            story: "你提著拿錯的行李箱，與小n一同走在昏黃燈光的歐風異國街頭。箱上的第一道鎖發出光芒，天快黑了，為了順利應對眼前的未知環境，你的第一個反應是掏出什麼隨身道具？",
+            options: [
+                { badge: "A", text: "掏出預先繪製好的地圖與指南，冷靜確認方向與環境。", tag: "萬全準備型 / 到價通知與預約換匯", weight: "準備" },
+                { badge: "B", text: "掏出神奇星光羅盤，每天自動指向最適小路，免操心。", tag: "省時自動化型 / 自動定期定額扣款", weight: "自動" },
+                { badge: "C", text: "注意街角告示顯示這裡有罕見幸運水晶，抓準機會多帶幾顆。", tag: "投資獲利型 / 外幣高利定存與投資", weight: "投資" }
+            ]
+        },
+        {
+            level: 2,
+            category: "信用卡偏好",
+            imgUrl: "image_c88f21.jpg",
+            story: "第一道鎖順利開了！你與小n推開了一家神秘的『人生補給站』木門，店內懸浮著各式閃耀著魔法光芒的冒險徽章。你決定挑選一個戴上，你會選哪一個？",
+            options: [
+                { badge: "A", text: "能在在地餐館享無限次美食試吃與驚喜禮物的『美食徽章』。", tag: "華南夢時代聯名卡/酷愛黑卡 - 現金回饋", weight: "享受" },
+                { badge: "B", text: "能隨時召喚飛鷹載你跨越山海、免費進雲端休息室賞景的『羽翼徽章』。", tag: "領航尊榮卡/The ONE尊榮卡 - 航空高端", weight: "尊榮" },
+                { badge: "C", text: "提供專屬座騎停靠位、免費保養與一路平順護盾的『車輪徽章』。", tag: "嘟嘟房聯名卡 - 實用車主附加服務", weight: "實用" }
+            ]
+        },
+        {
+            level: 3,
+            category: "信用貸款偏好",
+            imgUrl: "image_c88efd.jpg",
+            story: "帶上徽章繼續前進，你與小n來到佇立在森林深處的『時空傳送門』前，門框突然發出紅色警報：『能量不足，無法啟動！』為了繼續前行，你需要額外取得時空結晶，你會？",
+            options: [
+                { badge: "A", text: "按下門旁的緊急快速補充鈕，先借用結晶通關，效率第一！", tag: "急需資金 / 快速撥款導向", weight: "效率" },
+                { badge: "B", text: "仔細研讀門旁的使用告示牌，確認歸還時間與消耗規則再補充。", tag: "精算利率型 / 比價低利導向", weight: "精算" },
+                { badge: "C", text: "放棄搭乘傳送門，決定花較長時間徒步繞遠路，絕不輕易借用。", tag: "保守極低意願 / 目前無貸款需求", weight: "穩健" }
+            ]
+        },
+        {
+            level: 4,
+            category: "房屋貸款偏好",
+            imgUrl: "image_c88bf7.jpg",
+            story: "穿過傳送門後，小n帶你來到小鎮最高處的『時空展望台』。從這裡遠眺，可以看到未來 3~5 年你最心儀的落腳處風景，哪一個畫面最讓你怦然心動？",
+            options: [
+                { badge: "A", text: "一座位於鎮中心繁華地段、出門就是市集與車站的精緻玻璃小屋。", tag: "剛性首購族 / 近期購屋需求", weight: "務實" },
+                { badge: "B", text: "山頂上一座能俯瞰大海、空間寬廣適合全家人舒適同住的森林莊園。", tag: "換屋置產族 / 理財型房貸與增轉貸", weight: "遠見" },
+                { badge: "C", text: "停靠在港口、隨時可以揚帆前往下一個未知國度的豪華帆船。", tag: "目前無購屋意願 / 偏好自由租屋生活", weight: "自由" }
+            ]
+        },
+        {
+            level: 5,
+            category: "活儲存款偏好",
+            imgUrl: "image_c88ae3.png",
+            story: "最後一道鎖順利解開了！行李箱完好歸還給趕來的時空主人。為了答謝你的熱心與智慧，主人帶你走進光線明亮的溫室，送你一盆神秘的『幸運植物』，你希望它怎麼成長？",
+            options: [
+                { badge: "A", text: "隨時可以摘採新鮮果實，而且每天都會自動冒出甜美的新芽。", tag: "SnY數位帳戶 - 高利活儲偏好", weight: "靈活" },
+                { badge: "B", text: "細心呵護在溫室保險箱裡，時間一到就能結出最碩大的果實。", tag: "定期存款/整存整付偏好", weight: "嚴謹" },
+                { badge: "C", text: "放入自動巡航溫室，讓它順應季節變化自動選擇最優生長模式。", tag: "AI好基智/定期定額偏好", weight: "智慧" }
+            ]
+        }
+    ];
+
+    let currentLevel = 0;
+    let userAnswers = [];
+
+    function initGame() {
+        currentLevel = 0;
+        userAnswers = [];
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const data = gameData[currentLevel];
+        
+        // 更新進度與插畫圖片
+        document.getElementById("progressBar").style.width = ((currentLevel + 1) / gameData.length * 100) + "%";
+        document.getElementById("levelTag").innerText = `關卡 ${data.level} / ${gameData.length}`;
+        document.getElementById("storyText").innerText = data.story;
+        document.getElementById("sceneImage").src = data.imgUrl;
+
+        // 更新選項按鈕
+        const container = document.getElementById("optionsContainer");
+        container.innerHTML = "";
+
+        data.options.forEach((opt, index) => {
+            const btn = document.createElement("div");
+            btn.className = "option-btn";
+            btn.onclick = () => selectOption(index);
+            btn.innerHTML = `
+                <div class="option-badge">${opt.badge}</div>
+                <div>${opt.text}</div>
+            `;
+            container.appendChild(btn);
+        });
+    }
+
+    function selectOption(index) {
+        const currentData = gameData[currentLevel];
+        const selectedOpt = currentData.options[index];
+
+        userAnswers.push({
+            category: currentData.category,
+            tag: selectedOpt.tag,
+            weight: selectedOpt.weight
+        });
+
+        currentLevel++;
+        if (currentLevel < gameData.length) {
+            showQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById("illustrationBox").classList.add("hidden");
+        document.getElementById("gameScreen").classList.add("hidden");
+        document.getElementById("resultScreen").style.display = "flex";
+
+        // 動態判定人格關鍵字稱號
+        const titles = [
+            { title: "睿智的時空觀察者", desc: "你擁有極高的適應力與決策智慧，在漫長且複雜的旅程中，總是能憑藉冷靜的觀察力協助小n化解危機！" },
+            { title: "前瞻的時空領航員", desc: "你對未來充滿遠見與規劃，不論面對何種未知的挑戰，都能選擇最有效率且具長遠效益的絕佳路徑！" },
+            { title: "敏銳的冒險決策者", desc: "你的直覺非常敏銳，善於把握當下的資源與機會，這讓你在這趟行李箱奇幻之旅中脫穎而出！" }
+        ];
+
+        const finalResult = titles[Math.floor(Math.random() * titles.length)];
+        document.getElementById("userTitle").innerText = finalResult.title;
+        document.getElementById("userDesc").innerText = finalResult.desc;
+
+        // 紀錄後台標籤
+        let tagHtml = "<strong>[華南銀行個人化數據貼標紀錄]</strong><br>";
+        userAnswers.forEach((ans, i) => {
+            tagHtml += `${i+1}. [${ans.category}]: ${ans.tag}<br>`;
+        });
+        document.getElementById("debugTags").innerHTML = tagHtml;
+    }
+
+    function claimFinalReward() {
+        alert("🎉 15 點 LINE POINTS 領取成功！點數將直接匯入您的 LINE 帳戶。感謝您參加華南銀行時空旅人奇幻之旅！");
+    }
+
+    window.onload = initGame;
+</script>
+
+</body>
+</html>
